@@ -1,5 +1,7 @@
+.vscode/
+
 py/__pycache__/
-py/.vscode/
+
 py/env/
 py/video/*
 py/audio/*
