@@ -2,13 +2,13 @@
 ## Python Audio and Video Backend
 ### Virtual Environment
 
-In the command line, move into ```/pybackend``` and create a virtual environment for the project:
+In the command line, move into ```/py``` and create a virtual environment for the project:
 
 ```
 virtualenv env
 ```
 
-From ```/pybackend```, move into the env folder and call the activate script to activate  the virtual environment:
+From ```/py```, move into the env folder and call the activate script to activate  the virtual environment:
 
 ```
 cd env/Scripts/
@@ -21,7 +21,7 @@ The command line should now indicate that the environment is activated:
 (env) c:/ ... / Scripts
 ```
 
-Move up to the ```/pybackend``` directory and install the dependencies defined in ```requirements.txt```:
+Move up to the ```/py``` directory and install the dependencies defined in ```requirements.txt```:
 
 ```
 cd ../../
@@ -40,7 +40,7 @@ https://www.ffmpeg.org/download.htmlhttps://www.ffmpeg.org/download.html
 First, make sure the following directory structure is present:
 
 ```
-/pybackend
+/py
     /audio
     /video
     orchestrated_video.py

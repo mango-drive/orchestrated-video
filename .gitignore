@@ -5,6 +5,7 @@ py/__pycache__/
 py/env/
 
 py/audio/*
+py/audio/*.wav
 !py/audio/.gitkeep
 
 py/video/*
