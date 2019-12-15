@@ -3,7 +3,7 @@ import os
 from os import listdir, remove
 from os.path import isfile, join
 from audio_analysis import AudioFile, OnsetExtractor
-from video_edit import MoviePyEditor
+from video_edit import MoviePyEditor, MoviePyClipPlayer
 
 def re_encode(video_path, target_dir, target_name):
     # Resize and rencode the video and store result in the target_dir
@@ -63,7 +63,12 @@ if __name__ == '__main__':
     # list of ffmpeg input videos
 
     moviepy_editor = MoviePyEditor(session_video_paths)
-    moviepy_editor.create_edit(session_video_paths, edit_list, audio_path)
+    edit = moviepy_editor.create_edit(session_video_paths, edit_list)
+
+    moviepy_editor.write_final_edit(edit, audio_path, './output.mp4')
+
+    moviepy_player = MoviePyClipPlayer()
+    moviepy_player.play_video('output.mp4')
     
 
 

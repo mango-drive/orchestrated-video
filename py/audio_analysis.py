@@ -34,6 +34,7 @@ class AudioFile:
         return librosa.get_duration(self.x, self.sr)
 
 
+
 class OnsetExtractor:
     def __init__(self, settings = None):
         self.settings = Setting() if settings is None else Setting(settings)
