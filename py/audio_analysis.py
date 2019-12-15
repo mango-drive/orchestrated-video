@@ -6,6 +6,32 @@ import matplotlib
 from matplotlib import pyplot as plt
 from scipy import signal
 
+
+class AudioFile: 
+    def __init__(self, path): 
+        # self.x: numpy array representing audio samples
+        # self.sr: sample rate of the audio file
+        self.samples, self.sr = librosa.load(path)
+    
+    def get_sampling_rate(self):
+        return self.sr
+    
+    def get_duration(self):
+        return librosa.get_duration(self.x, self.sr)
+
+class AudioProcessingChain:
+    chain = []
+
+    def set_next(self, audio_component):
+        self.chain.append(audio_component)
+        return self
+    
+    def process(self, samples):
+        for component in self.chain:
+            samples = component.process(samples)
+            
+        return samples
+            
 _default_settings = {
     "sr": 44100, # sample rate, Hz
     "filter": {
@@ -15,56 +41,34 @@ _default_settings = {
     }
 }
 
-class Setting:
-    def __init__(self, dict = _default_settings):
-        self.sr = dict["sr"]
-        self.filter = dict["filter"]
-    
+class Filter:
+    def __init__(self, settings = _default_settings):
+        self.settings = settings
 
-class AudioFile: 
-    def __init__(self, path): 
-        # self.x: numpy array representing audio samples
-        # self.sr: sample rate of the audio file
-        self.x, self.sr = librosa.load(path)
-    
-    def get_sampling_rate(self):
-        return self.sr
-    
-    def get_duration(self):
-        return librosa.get_duration(self.x, self.sr)
+    def _filter(self, samples):
+        b, a = signal.butter( self.settings["filter"]["order"],
+                              self.settings["filter"]["cutoff"],
+                              self.settings["filter"]["response"],
+                              fs = self.settings["sr"]
+        )
+        return signal.filtfilt(b, a, samples)
 
+    def process(self, samples):
+        return self._filter(samples)
 
 
 class OnsetExtractor:
-    def __init__(self, settings = None):
-        self.settings = Setting() if settings is None else Setting(settings)
-
-    def extract_onsets(self, audio_file, filter_settings = None):
+    def extract_onsets(self, samples):
         # Find estimated locations of onsets in an audio file, using a filter
         # to select a bandwidth in the audio file, and the peak picking algorithm
         # provided by librosa.onset.onset_detect
 
-        # Update the settings to the audio file's sampling rate
-        self.settings.sr = audio_file.sr
-
-        # filter the audio
-        filter_settings = self.settings.filter if filter_settings is None else filter_settings
-        filtered_samples = np.asfortranarray(self._filter(audio_file.x, filter_settings))
-
+        samples = np.asfortranarray(samples)
         # Detect onset locations, units = seconds
-        onset_times = librosa.onset.onset_detect(filtered_samples, units = 'time', backtrack=True)
+        onset_times = librosa.onset.onset_detect(samples, units = 'time', backtrack=True)
 
         return onset_times
     
-    def _filter(self, audio_samples, f_settings):
-        b, a = signal.butter( f_settings["order"],
-                              f_settings["cutoff"],
-                              f_settings["response"],
-                              fs = self.settings.sr
-        )
-        
-        w, h = signal.freqs(b, a)
-        return signal.filtfilt(b, a, audio_samples)
 
     
  

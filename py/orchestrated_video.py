@@ -2,7 +2,7 @@ import sys
 import os
 from os import listdir, remove
 from os.path import isfile, join
-from audio_analysis import AudioFile, OnsetExtractor
+from audio_analysis import AudioFile, Filter, AudioProcessingChain, OnsetExtractor
 from video_edit import MoviePyEditor, MoviePyClipPlayer
 
 def re_encode(video_path, target_dir, target_name):
@@ -41,10 +41,16 @@ if __name__ == '__main__':
     print("Loading audio: ", audio_path)
     audio_file = AudioFile(audio_path)
 
+    lowpass = Filter()
+    pre_process_chain = AudioProcessingChain()
+    pre_process_chain.set_next(lowpass)
+
     oe = OnsetExtractor()
+    print("Applying pre-processing to the audio...")
+    samples = pre_process_chain.process(audio_file.samples)
     
     print("Using onset extractor to create an edit list")
-    edit_list = oe.extract_onsets(audio_file)
+    edit_list = oe.extract_onsets(samples)
     print("The onset extractor found musical onsets at seconds:\n " , edit_list)
 
     # Get the list of videos in the video folder

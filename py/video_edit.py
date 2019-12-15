@@ -13,7 +13,7 @@ def clear_output_file():
 
 class MoviePyEditor:
     def __init__(self, video_paths):
-        self.video_clips = [VideoFileClip(path) for path in video_paths]
+        self.video_clips = [VideoFileClip(path) for path in video_paths if path.endswith(".mp4")]
 
     def create_edit(self, video_paths, edit_list):
         clear_output_file()
