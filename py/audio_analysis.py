@@ -6,7 +6,6 @@ import matplotlib
 from matplotlib import pyplot as plt
 from scipy import signal
 
-
 class AudioFile: 
     def __init__(self, path): 
         # self.x: numpy array representing audio samples
@@ -63,6 +62,7 @@ class OnsetExtractor:
         # to select a bandwidth in the audio file, and the peak picking algorithm
         # provided by librosa.onset.onset_detect
 
+        # librosa requires a fortran formatted array
         samples = np.asfortranarray(samples)
         # Detect onset locations, units = seconds
         onset_times = librosa.onset.onset_detect(samples, units = 'time', backtrack=True)
