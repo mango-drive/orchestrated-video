@@ -1,11 +1,17 @@
+
 import os
 from os import listdir, remove
 from os.path import isfile, join
+import time
+
+tload0 = time.time()
 import moviepy.editor
 from moviepy.editor import  VideoClip,                  \
                             VideoFileClip,              \
                             AudioFileClip,              \
                             CompositeVideoClip
+tload1 = time.time()
+
 import ffmpeg
 import abc
 
@@ -85,10 +91,9 @@ class MoviePyEditor(VideoEditorComponent):
     def concatenate_videoclips(self, subclips):
         return moviepy.editor.concatenate_videoclips(subclips)
 
-
-
     def write_final_edit(self, final_edit, audio_path, output_path):
 
+        print("Writing temp video without audio...")
         final_edit.write_videofile( 'temp.mp4',
                                     audio=False, # TODO Fix moviepy bug
                                     preset='ultrafast', 
@@ -97,8 +102,15 @@ class MoviePyEditor(VideoEditorComponent):
 
         # moviepy bug : resort to ffmpeg 
         if isfile(output_path): remove(output_path)
-        print(f"Writing final video to disk at {output_path}")
-        os.system(f"ffmpeg -i temp.mp4 -i {audio_path} -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -b:a 192k output.mp4")
+        print(f"Writing final video (with audio) to disk at {output_path} using ffmpeg due to moviepy bug...")
+        
+        os.system(  f"ffmpeg  -loglevel panic                   \
+                    -i temp.mp4 -i {audio_path} -c:v copy       \
+                    -map 0:v:0 -map 1:a:0 -c:a aac -b:a 192k    \
+                    {output_path}"
+        )
+
+        os.remove('temp.mp4')
         
 
 class MoviePyClipPlayer:
@@ -110,8 +122,14 @@ if __name__ == "__main__":
     video_dir = "./video/session"
     audio_path = "./audio/trap_loop_2.wav"
 
+    t0 = time.time()
     moviepy_editor = MoviePyEditor(video_dir)
     video_decorator = VideoEditorDecorator(moviepy_editor)
-    final_edit = video_decorator.create_edit([1,2,3,4])
+    final_edit = video_decorator.create_edit([1, 2, 3, 4, 5, 6, 7])
     video_decorator.write_final_edit(final_edit, audio_path, "output_moviepy.mp4")
+    t1 = time.time()
+
+    print(f"Moviepy implementation took {t1-t0} to complete the final edit")
+    print(f"Moviepy also took {tload1 - tload0} to load imports including pygame")
+
 
