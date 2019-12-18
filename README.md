@@ -64,7 +64,7 @@ At the moment, running this for the first time requires a bit of set up.
     
 6. Now run:
 ```
-orchestrated_video.py filename.wav
+python orchestrated_video.py filename.wav
 ```
 Where ```filename.wav``` is the audio file in the audio directory. 
 
