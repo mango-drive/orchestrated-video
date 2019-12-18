@@ -64,8 +64,10 @@ At the moment, running this for the first time requires a bit of set up.
     
 6. Now run:
 ```
-orchestrated_video.py
+orchestrated_video.py filename.wav
 ```
+Where ```filename.wav``` is the audio file in the audio directory. 
+
 The final output is stored in ```video/session/output/```
 
 Steps 1-3 are now only necessary if you want to change the input videos in the ```video``` directory.
