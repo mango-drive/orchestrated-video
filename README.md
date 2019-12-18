@@ -55,24 +55,20 @@ At the moment, running this for the first time requires a bit of set up.
 
 1. Place the audio file in the ```audio``` directory
 2. Place the videos in the ```video``` directory
-2. Open ```orchestrated_video.py```, 
-3. Uncomment the line in ```'__main__'``` :
 
-    ``` py 
-    # Creates a session directory in /video to store re-encoded videos
-    prepare_session(video_dir, session_dir) 
-    ```
 5. In the command line, make the sure virtual environment is activated an run:
     ```
-    python orchestrated_video.py filename.wav
+    python file_structure.py
     ```
-    Where ```filename.wav``` is the filename and extension of the audio file in ```/audio``` that you want to use to edit the video.
-
-    You will see ffmpeg logs while it re-encodes the videos and then logs from this project when it makes the final edits.
-
-6. The result file is ```output.mp4```.
+    This will transcode all of the videos in the ```video``` directory to the same format, and place them in a newly created ```video/session``` folder.
     
-6. If you don't plan on changing the videos in ```/video```, you can now re-comment the line so that re-encoding does not occur again. Sorry, long winded for now! Re-encoding the videos is not required if you want to change the audio file.
+6. Now run:
+```
+orchestrated_video.py
+```
+The final output is stored in ```video/session/output/```
+
+Steps 1-3 are now only necessary if you want to change the input videos in the ```video``` directory.
 
 ## Contributions
 Contributions are most welcome!
